@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd  
+                        http://www.springframework.org/schema/context  
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                        http://code.alibabatech.com/schema/dubbo
+                        http://code.alibabatech.com/schema/dubbo/dubbo.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!-- 自动扫描 -->
+    <context:component-scan base-package="file">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <!--<mvc:annotation-driven/>-->
+    </context:component-scan>
+
+    <!-- 引入配置文件 -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="fileEncoding" value="utf-8"/>
+        <property name="locations">
+            <list>
+                <value>classpath*:*.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <import resource="redis-context.xml"/>
+    <import resource="spring-datasource.xml"/>
+
+    <dubbo:application name="file_store_server"/>
+    <!-- 用dubbo协议在20880端口暴露服务 -->
+    <!--<dubbo:protocol name="dubbo" host="172.30.0.68" port="20883" />-->
+    <!--使用zookeeper注册中心暴露服务地址 即zookeeper的所在服务器ip地址和端口号 -->
+    <!--<dubbo:registry address="zookeeper://39.108.74.219:2181" check="false"/>-->
+    <!--<dubbo:protocol name="dubbo" host="39.108.74.219" port="20880" />-->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181" check="false"/>
+
+    <!-- 声明需要暴露的服务接口 -->
+    <!--<bean id="myFileS" class="file.service.impl.MyFileServiceImpl"/>-->
+    <dubbo:service interface="com.file.service.MyFileService" ref="myFileServiceImpl" timeout="1200000"/>
+    <dubbo:service interface="com.file.service.UploadFileService" ref="uploadFileService" timeout="1200000"/>
+    <dubbo:service interface="com.file.service.DownloadFileService" ref="downloadFileService" timeout="1200000"/>
+
+    <bean id="serviceEx" class="file.util.AspectExceptionHandle"/>
+    <aop:config>
+        <aop:aspect id="exServiceAop" ref="serviceEx">
+            <aop:pointcut id="exParam" expression="execution(* com.file.service.*Service.*(..))"/>
+            <aop:after-throwing pointcut-ref="exParam" method="doThrowing" throwing="ex"/>
+        </aop:aspect>
+<!--
+        <aop:aspect id="exService" ref="serviceEx">
+            <aop:pointcut id="rsp" expression="execution(* file.util.AspectExceptionHandle.*(..)) and args(request,e)"/>
+            <aop:after pointcut-ref="rsp" method="handleRuntimeException" arg-names="request,e"/>
+        </aop:aspect>
+-->
+
+    </aop:config>
+
+
+</beans>

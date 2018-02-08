@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="file.dao.MyFileDao">
+    <resultMap id="BaseResultMap" type="com.file.entity.MyFile">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="file_use_type" jdbcType="VARCHAR" property="fileUseType"/>
+        <result column="file_name" jdbcType="VARCHAR" property="fileName"/>
+        <result column="file_type" jdbcType="VARCHAR" property="fileType"/>
+        <result column="file_statue" jdbcType="VARCHAR" property="fileStatue"/>
+        <result column="real_path" jdbcType="VARCHAR" property="realPath"/>
+        <result column="relative_path" jdbcType="VARCHAR" property="relativePath"/>
+        <result column="upload_time" jdbcType="TIMESTAMP" property="uploadTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, user_id, file_use_type, file_name, file_type, file_statue, real_path, relative_path,
+        upload_time
+    </sql>
+
+    <select id="getMyFileByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from shop_myfile
+        where user_id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="getFileRealPathById"  resultType="java.lang.String">
+        select
+            real_path
+        from shop_myfile
+        where id IN
+        <foreach collection="list" index="" item="id" open="(" separator="," close=")">
+            #{id,jdbcType=INTEGER}
+        </foreach>
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM shop_myfile
+        WHERE id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <insert id="insert" parameterType="MyFile">
+        INSERT INTO shop_myfile (id, user_id, file_use_type,
+                                 file_name, file_type, file_statue,
+                                 real_path, relative_path, upload_time
+        )
+        VALUES (#{id,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{fileUseType,jdbcType=VARCHAR},
+                #{fileName,jdbcType=VARCHAR}, #{fileType,jdbcType=VARCHAR}, #{fileStatue,jdbcType=VARCHAR},
+                #{realPath,jdbcType=VARCHAR}, #{relativePath,jdbcType=VARCHAR}, #{uploadTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <insert id="insertMyFile" parameterType="MyFile">
+        insert into shop_myfile
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="fileUseType != null">
+                file_use_type,
+            </if>
+            <if test="fileName != null">
+                file_name,
+            </if>
+            <if test="fileType != null">
+                file_type,
+            </if>
+            <if test="fileStatue != null">
+                file_statue,
+            </if>
+            <if test="realPath != null">
+                real_path,
+            </if>
+            <if test="relativePath != null">
+                relative_path,
+            </if>
+            <if test="uploadTime != null">
+                upload_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="fileUseType != null">
+                #{fileUseType,jdbcType=VARCHAR},
+            </if>
+            <if test="fileName != null">
+                #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="fileType != null">
+                #{fileType,jdbcType=VARCHAR},
+            </if>
+            <if test="fileStatue != null">
+                #{fileStatue,jdbcType=VARCHAR},
+            </if>
+            <if test="realPath != null">
+                #{realPath,jdbcType=VARCHAR},
+            </if>
+            <if test="relativePath != null">
+                #{relativePath,jdbcType=VARCHAR},
+            </if>
+            <if test="uploadTime != null">
+                #{uploadTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="MyFile">
+        update shop_myfile
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="fileUseType != null">
+                file_use_type = #{fileUseType,jdbcType=VARCHAR},
+            </if>
+            <if test="fileName != null">
+                file_name = #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="fileType != null">
+                file_type = #{fileType,jdbcType=VARCHAR},
+            </if>
+            <if test="fileStatue != null">
+                file_statue = #{fileStatue,jdbcType=VARCHAR},
+            </if>
+            <if test="realPath != null">
+                real_path = #{realPath,jdbcType=VARCHAR},
+            </if>
+            <if test="relativePath != null">
+                relative_path = #{relativePath,jdbcType=VARCHAR},
+            </if>
+            <if test="uploadTime != null">
+                upload_time = #{uploadTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="MyFile">
+        UPDATE shop_myfile
+        SET user_id       = #{userId,jdbcType=VARCHAR},
+            file_use_type = #{fileUseType,jdbcType=VARCHAR},
+            file_name     = #{fileName,jdbcType=VARCHAR},
+            file_type     = #{fileType,jdbcType=VARCHAR},
+            file_statue   = #{fileStatue,jdbcType=VARCHAR},
+            real_path     = #{realPath,jdbcType=VARCHAR},
+            relative_path = #{relativePath,jdbcType=VARCHAR},
+            upload_time   = #{uploadTime,jdbcType=TIMESTAMP}
+        WHERE user_id = #{user_id,jdbcType=INTEGER}
+    </update>
+
+    <select id="checkFileChanges" parameterType="java.lang.String" resultType="com.file.entity.CheckFileChanges">
+        select MAX(id) as id,
+        COUNT(id) as idCount
+        FROM shop.shop_myfile
+        where user_id = #{userId}
+    </select>
+
+</mapper>

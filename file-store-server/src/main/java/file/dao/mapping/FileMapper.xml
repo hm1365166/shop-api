@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="file.dao.FileDao">
+    <resultMap id="BaseResultMap" type="com.file.entity.File">
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="fileName" property="fileName" jdbcType="VARCHAR"/>
+        <result column="filePath" property="filePath" jdbcType="VARCHAR"/>
+        <result column="fileType" property="fileType" jdbcType="VARCHAR"/>
+        <result column="fileIdentity" property="fileIdentity" jdbcType="VARCHAR"/>
+        <result column="fileStatue" property="fileStatue" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="getFileByUserId" resultMap="BaseResultMap" parameterType="String">
+        SELECT
+            t.id,
+            t.fileName,
+            t.filePath,
+            t.fileType,
+            t.fileIdentity,
+            t.fileStatue
+        FROM
+            shop_file t
+        WHERE t.fileIdentity = #{userId} AND t.fileStatue = "SUCCESS"
+    </select>
+
+    <select id="getFileToShow" resultMap="BaseResultMap" parameterType="String">
+        SELECT
+            t.id,
+            t.fileName,
+            t.filePath,
+            t.fileType,
+            t.fileIdentity,
+            t.fileStatue
+        FROM
+            shop_file t
+        WHERE t.fileStatue = "SUCCESS"
+    </select>
+
+    <insert id="insertFile" parameterType="File">
+        INSERT INTO shop_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fileName!= null">
+                fileName,
+            </if>
+            <if test="filePath!= null">
+                filePath,
+            </if>
+            <if test="fileType!= null">
+                fileType,
+            </if>
+            <if test="fileIdentity!= null">
+                fileIdentity,
+            </if>
+            <if test="fileStatue!= null">
+                fileStatue,
+            </if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="fileName!= null">
+                #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="filePath!= null">
+                #{filePath,jdbcType=VARCHAR},
+            </if>
+            <if test="fileType!= null">
+                #{fileType,jdbcType=VARCHAR},
+            </if>
+            <if test="fileIdentity!= null">
+                #{fileIdentity,jdbcType=INTEGER},
+            </if>
+            <if test="fileStatue!= null">
+                #{fileStatue,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByUserId" parameterType="File">
+        update person
+        <set>
+            <if test="fileStatue != null">
+                `fileStatue` = #{fileStatue,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where fileIdentity = #{fileIdentity,jdbcType=INTEGER}
+    </update>
+
+
+</mapper>

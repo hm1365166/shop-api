@@ -1,0 +1,16 @@
+.div1{
+    width: auto;
+    height: auto;
+    background: #cccccc;
+    position: relative;
+}
+.div2{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -600px;
+    margin-top: -200px;
+    line-height: 40px;
+    font-size: 12px;
+    text-align: center;
+}

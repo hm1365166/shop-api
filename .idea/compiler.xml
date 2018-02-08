@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="file-store-server" />
+        <module name="shop-api-provider" />
+        <module name="shop-api-skeleton" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="file-store-server" target="1.7" />
+      <module name="shop-api" target="1.7" />
+      <module name="shop-api-provider" target="1.7" />
+      <module name="shop-api-skeleton" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

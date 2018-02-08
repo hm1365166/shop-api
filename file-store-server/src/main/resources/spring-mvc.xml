@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd  
+                        http://www.springframework.org/schema/context  
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd  
+                        http://www.springframework.org/schema/mvc  
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+    <!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
+    <context:component-scan base-package="file.controller"/>
+
+    <!-- 配置文件配置，使得controller中能够使用@Value注解取值 -->
+    <context:property-placeholder file-encoding="UTF-8" location="classpath:*.properties" ignore-unresolvable="true"/>
+
+    <!-- 静态资源访问权限 -->
+    <mvc:resources location="../resources/" mapping="/resources/**"/>
+
+    <!--主要作用于@Controller激活该模式下面是一种简写形式 它会自动注册DefaultAnnotationHandlerMapping与AnnotationMethodHandlerAdapter，
+        是spring MVC为@Controllers分发请求所必须的 -->
+    <mvc:annotation-driven conversion-service="conversionServices">
+        <mvc:message-converters register-defaults="true">
+            <ref bean="mappingJacksonHttpMessageConverter"/>
+            <ref bean="stringHttpMessageConverter"/>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <!--自定义拦截器，用来实现权限控制-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!-- 使用/**相当于全局拦截器 -->
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/resources/**"/>
+            <bean class="file.controller.Interceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!-- 控制日期格式的 -->
+    <bean id="conversionServices" class="org.springframework.format.support.FormattingConversionServiceFactoryBean"/>
+    <!--json处理 -->
+    <bean id="mappingJacksonHttpMessageConverter"
+          class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>application/json;charset=UTF-8</value>
+                <value>text/html;charset=UTF-8</value>
+                <value>text/plain;charset=UTF-8</value>
+                <value>application/x-www-form-urlencoded; charset=UTF-8</value>
+            </list>
+        </property>
+        <property name="prettyPrint" value="true"/>
+        <property name="objectMapper">
+            <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                <property name="dateFormat">
+                    <bean class="java.text.SimpleDateFormat">
+                        <constructor-arg type="java.lang.String" value="yyyy-MM-dd"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!--String处理 -->
+    <bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+        <constructor-arg value="UTF-8" index="0"/>
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/plain;charset=UTF-8</value>
+                <value>text/html;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!-- 配置文件上传 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8" />  
+        <property name="maxUploadSize" value="10485760000" />  
+        <property name="maxInMemorySize" value="40960" />  
+    </bean> 
+
+</beans>

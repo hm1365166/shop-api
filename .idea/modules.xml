@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../shop-api/file-store-server/file-store-server.iml" filepath="$PROJECT_DIR$/../shop-api/file-store-server/file-store-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-api.iml" filepath="$PROJECT_DIR$/shop-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../shop-api/shop-api-provider/shop-api-provider.iml" filepath="$PROJECT_DIR$/../shop-api/shop-api-provider/shop-api-provider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../shop-api/shop-api-skeleton/shop-api-skeleton.iml" filepath="$PROJECT_DIR$/../shop-api/shop-api-skeleton/shop-api-skeleton.iml" />
+    </modules>
+  </component>
+</project>

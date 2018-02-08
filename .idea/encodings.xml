@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/../shop-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../shop-api/file-store-server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../shop-api/shop-api-provider" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../shop-api/shop-api-skeleton" charset="UTF-8" />
+  </component>
+</project>
