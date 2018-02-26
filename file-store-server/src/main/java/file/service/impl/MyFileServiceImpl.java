@@ -11,6 +11,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * @author:HM
+ * @date: 18-02-26 16:52:55
+ * @since v1.0.0
+ */
 @Service
 public class MyFileServiceImpl implements MyFileService {
 

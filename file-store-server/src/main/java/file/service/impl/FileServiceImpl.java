@@ -1,16 +1,18 @@
 package file.service.impl;
 
 import com.file.entity.File;
-import file.dao.FileDao;
-
 import com.file.service.FileService;
+import file.dao.FileDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * @author:HM
+ * @date: 18-02-26 16:52:37
+ * @since v1.0.0
+ */
 @Service
 public class FileServiceImpl implements FileService {
 
