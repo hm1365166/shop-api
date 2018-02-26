@@ -19,10 +19,11 @@ public interface DownloadFileService {
 	/**
 	 * downloadMulFile
 	 *
-	 * @param userId
 	 * @author:HM
-	 * @date: 17-12-23 11:19:54
+	 * @date: 18-02-26 16:23:04
 	 * @since v1.0.0
+	 * @param id
+	 * @return
 	 */
 	ResponseRsp downloadMulFile(List<Integer> id);
 
