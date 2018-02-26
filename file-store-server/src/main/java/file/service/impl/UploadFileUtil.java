@@ -36,7 +36,7 @@ public class UploadFileUtil implements UploadFileService {
 	private DataSourceTransactionManager transactionManager;
 
 	@Value("${person_file_path}")
-	private String File_PATH;
+	private String filePath;
 
 	@Autowired
 	private MyFileService myFileService;
@@ -64,7 +64,7 @@ public class UploadFileUtil implements UploadFileService {
 			Calendar calendar = Calendar.getInstance();
 			StringBuilder path = new StringBuilder();
 			//calendar.setTimeInMillis();
-			path.append(File_PATH);
+			path.append(filePath);
 			path.append(calendar.get(Calendar.YEAR));
 			path.append(calendar.get(Calendar.MONTH) + 1);
 			path.append(calendar.get(Calendar.DATE));
@@ -124,7 +124,7 @@ public class UploadFileUtil implements UploadFileService {
 				rt.setStatus(ResultCode.SUCCESS);
 				rt.setContent(json.toString());
 			} catch (IOException e) {
-				logger.error("保存文件到服务器异常：\r\n {}", e.toString());
+				logger.error("保存文件到服务器异常:{}", e.toString());
 				rt.setStatus(ResultCode.FAILED);
 				rt.setErrorMessage("保存文件到服务器异常");
 				e.printStackTrace();
@@ -134,7 +134,7 @@ public class UploadFileUtil implements UploadFileService {
 			}
 		}
 		logger.info("存在同名文件共 " + countSameFile);
-		throw new Exception();
+		return rt;
 	}
 
 }
