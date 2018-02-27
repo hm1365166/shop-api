@@ -63,6 +63,7 @@ public class UploadFileUtil implements UploadFileService {
 			String fileName = multipartFile.getOriginalFilename();
 			Calendar calendar = Calendar.getInstance();
 			StringBuilder path = new StringBuilder();
+			//calendar.setTimeInMillis();
 			path.append(filePath);
 			path.append(calendar.get(Calendar.YEAR));
 			path.append(calendar.get(Calendar.MONTH) + 1);
