@@ -24,6 +24,7 @@ import org.springframework.util.StringUtils;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -56,7 +57,8 @@ public class UploadFileUtil implements UploadFileService {
 			throw new FileNotFoundException();
 		}
 
-		int countSameFile = 0;
+		List<String> sameFileNames = new ArrayList<>();
+		List<String> relativePaths = new ArrayList<>();
 		for (MultipartFileEntity multipartFile : multipartFiles) {
 
 			//String fileName = DateUtils.now().getTime() + "_" + multipartFile.getOriginalFilename();
@@ -83,13 +85,12 @@ public class UploadFileUtil implements UploadFileService {
 				if (!file.exists()) {
 					file.createNewFile();
 				} else {
-					++countSameFile;
-					logger.error(fileName + "存在同名文件");
+					sameFileNames.add(fileName);
 					continue;
 				}
 
 			} catch (IOException e) {
-				logger.info("上传文件：创建文件异常:\r\n {}", e.toString());
+				logger.info("上传文件：创建文件异常:{}", e.toString());
 				rt.setStatus(ResultCode.FAILED);
 				rt.setErrorMessage("创建文件异常");
 				return rt;
@@ -123,6 +124,8 @@ public class UploadFileUtil implements UploadFileService {
 				//json.put("url", NODE_DOMAIN + "/api/file/Download?userId=" + resumeId);
 				rt.setStatus(ResultCode.SUCCESS);
 				rt.setContent(json.toString());
+				relativePaths.add(fileRecord.getRelativePath());
+				logger.info("真实路径：{}", fileRecord.getRealPath());
 			} catch (IOException e) {
 				logger.error("保存文件到服务器异常:{}", e.toString());
 				rt.setStatus(ResultCode.FAILED);
@@ -133,7 +136,10 @@ public class UploadFileUtil implements UploadFileService {
 				throwable.printStackTrace();
 			}
 		}
-		logger.info("存在同名文件共 " + countSameFile);
+		logger.info("存在同名文件共：{}", sameFileNames.size());
+		logger.error("存在同名文件: {}", sameFileNames.toString());
+		rt.setErrorMessage("同名文件有：" + sameFileNames.toString());
+		rt.setData(relativePaths);
 		return rt;
 	}
 
